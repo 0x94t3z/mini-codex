@@ -2,14 +2,33 @@
 
 Mini Codex is a small terminal coding assistant built with Python and the OpenAI SDK, configured to call OpenRouter's Responses API. It keeps conversation state locally between turns, can inspect files in a workspace, and asks before it writes files or runs commands.
 
-## What it can do
+## Features
 
 - chat in the terminal
 - list and read files inside a workspace
 - create or overwrite text files after approval
+- create folders and move files inside the workspace
 - run non-shell commands like `python3 -m unittest` after approval
 - continue a conversation across multiple turns
 - use OpenRouter's free router by default
+- show a simple elapsed timer while the model is thinking
+
+## Quick Start
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install -e .
+cp .env.example .env
+mini-codex
+```
+
+Set your key in `.env`:
+
+```env
+OPENROUTER_API_KEY="your_api_key_here"
+```
 
 ## Setup
 
@@ -37,6 +56,13 @@ Then set your key in `.env`:
 
 ```env
 OPENROUTER_API_KEY="your_api_key_here"
+```
+
+Optional:
+
+```env
+MINI_CODEX_MODEL="openrouter/free"
+OPENROUTER_BASE_URL="https://openrouter.ai/api/v1"
 ```
 
 ## Run it
@@ -72,11 +98,44 @@ python3 -m pip install -r requirements.txt
 python3 main.py
 ```
 
+## Example Prompts
+
+```text
+Create a hello world script
+```
+
+```text
+Move hello.py to the generated folder
+```
+
+```text
+Create a calculator script in generated/calculator.py
+```
+
+```text
+Read main.py and explain how tool approvals work
+```
+
 ## Local commands
 
 - `/help`
 - `/reset`
 - `/quit`
+- `\help`
+- `\reset`
+- `\quit`
+
+## Project Layout
+
+```text
+mini-codex/
+├── main.py
+├── tests/
+├── README.md
+├── LICENSE
+├── pyproject.toml
+└── .env.example
+```
 
 ## Notes
 
@@ -87,3 +146,13 @@ python3 main.py
 - If you want a specific free model instead of the router, pass a model like `some-provider/some-model:free`.
 - `.env` is loaded automatically at startup, and existing shell environment variables still win if both are set.
 - If you prefer not to install the CLI entry point, `python3 main.py` still works.
+
+## Safety
+
+- File changes and destructive actions still require approval unless you use `--auto-approve`.
+- The app keeps operations inside the selected workspace directory.
+- `run_command` is intentionally limited and should not be treated as a full shell.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](/Users/0xgets/Documents/Python/mini-codex/LICENSE).
