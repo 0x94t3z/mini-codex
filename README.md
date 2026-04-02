@@ -126,11 +126,11 @@ Create a hello world script
 ```
 
 ```text
-Move hello.py to the generated folder
+Move hello.py to the examples folder
 ```
 
 ```text
-Create a calculator script in generated/calculator.py
+Create a calculator script in examples/calculator.py
 ```
 
 ```text
@@ -157,6 +157,7 @@ mini-codex/
 │       ├── config.py
 │       └── tools.py
 ├── main.py
+├── examples/
 ├── tests/
 ├── README.md
 ├── LICENSE
@@ -176,6 +177,7 @@ mini-codex/
 - If you prefer not to install the CLI entry point, `python3 main.py` still works.
 - `requirements.lock.txt` pins the runtime dependency versions used by the current build.
 - `ruff` is configured in `pyproject.toml` and runs in CI.
+- `examples/` is for sample workspaces and demo outputs you want to keep in the repository.
 
 ## Safety
 

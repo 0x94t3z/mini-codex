@@ -67,19 +67,19 @@ class WorkspaceToolTests(unittest.TestCase):
     def test_create_directory_creates_nested_folder(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             workdir = Path(tmp)
-            result = create_directory(workdir, "generated/scripts")
+            result = create_directory(workdir, "examples/scripts")
             self.assertTrue(result["ok"])
-            self.assertTrue((workdir / "generated" / "scripts").is_dir())
+            self.assertTrue((workdir / "examples" / "scripts").is_dir())
 
     def test_move_file_moves_and_creates_parent_folder(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             workdir = Path(tmp)
             write_text_file(workdir, "hello.py", "print('hi')\n")
 
-            result = move_text_file(workdir, "hello.py", "generated/hello.py")
+            result = move_text_file(workdir, "hello.py", "examples/hello.py")
             self.assertTrue(result["ok"])
             self.assertFalse((workdir / "hello.py").exists())
-            self.assertTrue((workdir / "generated" / "hello.py").exists())
+            self.assertTrue((workdir / "examples" / "hello.py").exists())
 
     def test_list_files_returns_relative_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -113,27 +113,27 @@ class WorkspaceToolTests(unittest.TestCase):
     def test_describe_tool_call_is_human_readable(self) -> None:
         message = describe_tool_call(
             "move_file",
-            {"source_path": "hello.py", "destination_path": "generated/hello.py"},
+            {"source_path": "hello.py", "destination_path": "examples/hello.py"},
         )
-        self.assertEqual(message, "Moving hello.py to generated/hello.py")
+        self.assertEqual(message, "Moving hello.py to examples/hello.py")
 
     def test_summarize_tool_results_returns_human_summary(self) -> None:
         summary = summarize_tool_results(
             [
-                ("create_directory", {"ok": True, "path": "generated", "created": True}),
+                ("create_directory", {"ok": True, "path": "examples", "created": True}),
                 (
                     "move_file",
                     {
                         "ok": True,
                         "source_path": "hello.py",
-                        "destination_path": "generated/hello.py",
+                        "destination_path": "examples/hello.py",
                         "moved": True,
                     },
                 ),
             ]
         )
-        self.assertIn("Created folder `generated`.", summary)
-        self.assertIn("Moved `hello.py` to `generated/hello.py`.", summary)
+        self.assertIn("Created folder `examples`.", summary)
+        self.assertIn("Moved `hello.py` to `examples/hello.py`.", summary)
 
     def test_parse_tool_arguments_parses_json_object(self) -> None:
         parsed, error = parse_tool_arguments('{"path":"hello.py"}')
