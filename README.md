@@ -62,6 +62,7 @@ Optional:
 
 ```env
 MINI_CODEX_MODEL="openrouter/free"
+MINI_CODEX_WORKDIR="."
 OPENROUTER_BASE_URL="https://openrouter.ai/api/v1"
 ```
 
@@ -83,6 +84,24 @@ Choose a workspace and model:
 
 ```bash
 mini-codex --workdir . --model openrouter/free
+```
+
+Set a default workspace in `.env`:
+
+```env
+MINI_CODEX_WORKDIR="./flask-ui"
+```
+
+Then you can simply run:
+
+```bash
+mini-codex
+```
+
+And override it any time with:
+
+```bash
+mini-codex --workdir ./another-folder
 ```
 
 Skip approval prompts:

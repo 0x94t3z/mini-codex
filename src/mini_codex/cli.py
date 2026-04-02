@@ -21,7 +21,7 @@ from .config import (
 )
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Mini Codex: a tiny coding assistant in your terminal.")
     parser.add_argument(
         "prompt",
@@ -35,7 +35,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--workdir",
-        default=".",
+        default=os.getenv("MINI_CODEX_WORKDIR", "."),
         help="Workspace directory Mini Codex can inspect and edit.",
     )
     parser.add_argument(
@@ -55,7 +55,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Automatically approve file writes and command execution.",
     )
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
 def ensure_runtime_ready() -> None:
