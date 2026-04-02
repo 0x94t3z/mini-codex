@@ -126,13 +126,13 @@ One-shot mode:
 mini-codex "Create a hello world script"
 ```
 
-Choose a workspace and model:
+Work inside the bundled examples workspace:
 
 ```bash
-mini-codex --workdir . --model openrouter/free
+mini-codex --workdir ./examples --model openrouter/free
 ```
 
-Choose a provider:
+Choose a provider and replace the model with one from that service:
 
 ```bash
 mini-codex --provider openai --model your_model_name
@@ -241,7 +241,8 @@ mini-codex/
   `MINI_CODEX_BASE_URL`, and `MINI_CODEX_MODEL`.
 - OpenRouter, OpenAI, and xAI use the Responses API path here, while Gemini
   uses the chat-completions path.
-- If you want a specific free model instead of the router, pass a model like `some-provider/some-model:free`.
+- If you want a specific free model instead of the router, pass the exact
+  OpenRouter model name, such as `provider/model:free`.
 - `.env` is loaded automatically at startup, and existing shell environment variables still win if both are set.
 - If you prefer not to install the CLI entry point, `python3 main.py` still works.
 - `requirements.lock.txt` pins the runtime dependency versions used by the current build.
