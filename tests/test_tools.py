@@ -11,7 +11,7 @@ for candidate in (SRC, ROOT):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
-from mini_codex.config import load_dotenv_file  # noqa: E402
+from mini_codex.env import load_dotenv_file  # noqa: E402
 from mini_codex.tools import (  # noqa: E402
     coerce_optional_int,
     create_directory,

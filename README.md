@@ -215,12 +215,19 @@ mini-codex/
 │   └── mini_codex/
 │       ├── agent.py
 │       ├── cli.py
+│       ├── console.py
 │       ├── config.py
+│       ├── env.py
+│       ├── providers.py
 │       └── tools.py
 ├── main.py
 ├── examples/
 │   └── README.md
 ├── tests/
+│   ├── test_agent.py
+│   ├── test_cli.py
+│   ├── test_console.py
+│   └── test_tools.py
 ├── README.md
 ├── docs/
 │   ├── README.md
