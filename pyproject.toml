@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mini-codex"
 dynamic = ["version"]
-description = "A small terminal coding assistant powered by OpenRouter."
+description = "A terminal coding assistant with workspace-scoped file tools and multi-provider support."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
