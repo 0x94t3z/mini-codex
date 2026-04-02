@@ -177,15 +177,15 @@ def format_status(agent: MiniCodex) -> str:
         f"workspace: {config.workdir}",
     ]
     if config.provider_name == "OpenRouter":
-        lines.append("route: OpenRouter free router or your selected OpenRouter model")
+        lines.append("route: OpenRouter free router")
     elif config.provider_name == "Gemini":
-        lines.append("route: Gemini chat-completions endpoint")
+        lines.append("route: Gemini chat-completions")
     elif config.provider_name == "xAI":
-        lines.append("route: xAI Responses endpoint")
+        lines.append("route: xAI Responses")
     elif config.provider_name == "OpenAI":
-        lines.append("route: OpenAI Responses endpoint")
+        lines.append("route: OpenAI Responses")
     else:
-        lines.append("route: custom OpenAI-compatible endpoint")
+        lines.append("route: custom endpoint")
     return "\n".join(lines)
 
 
