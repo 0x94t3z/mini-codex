@@ -32,7 +32,7 @@ It is a good fit when you want to:
 
 ## Demo
 
-![Mini Codex demo](assets/mini-codex-demo-v2.gif)
+![Mini Codex demo](assets/mini-codex-demo.gif)
 
 Mini Codex in action: scoped workspace editing, approval prompts, and real
 runtime status in a few terminal steps.
@@ -253,7 +253,7 @@ mini-codex/
 │       └── tools.py
 ├── main.py
 ├── assets/
-│   └── mini-codex-demo-v2.gif
+│   └── mini-codex-demo.gif
 ├── examples/
 │   └── README.md
 ├── tests/
