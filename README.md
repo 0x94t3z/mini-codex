@@ -107,7 +107,7 @@ OPENROUTER_BASE_URL="https://openrouter.ai/api/v1"
 pass `--workdir`. For example, if you set:
 
 ```env
-MINI_CODEX_WORKDIR="./flask-ui"
+MINI_CODEX_WORKDIR="./examples"
 ```
 
 then running `mini-codex` will open that folder by default.
@@ -149,7 +149,7 @@ mini-codex --provider xai --model grok-4.20-beta-latest-non-reasoning
 Set a default workspace in `.env`:
 
 ```env
-MINI_CODEX_WORKDIR="./flask-ui"
+MINI_CODEX_WORKDIR="./examples"
 ```
 
 Then you can simply run:
