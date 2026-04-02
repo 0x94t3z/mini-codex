@@ -34,6 +34,9 @@ It is a good fit when you want to:
 
 ![Mini Codex demo](assets/mini-codex-demo.gif)
 
+Mini Codex in action: scoped workspace editing, approval prompts, and real
+runtime status in a few terminal steps.
+
 In a short terminal clip, Mini Codex shows:
 
 1. Starting inside a real repo
