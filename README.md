@@ -167,6 +167,7 @@ mini-codex/
 │       └── tools.py
 ├── main.py
 ├── examples/
+│   └── README.md
 ├── tests/
 ├── README.md
 ├── LICENSE
@@ -189,6 +190,7 @@ mini-codex/
 - `pre-commit` runs Ruff and the unit tests before commits.
 - `pre-commit run --all-files` is a handy one-shot check before pushing.
 - `examples/` is for sample workspaces and demo outputs you want to keep in the repository.
+- `examples/README.md` describes the bundled sample workspaces.
 - Release notes live in [CHANGELOG.md](/Users/0xgets/Documents/Python/mini-codex/CHANGELOG.md).
 
 ## Safety
