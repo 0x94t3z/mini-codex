@@ -23,7 +23,7 @@ Mini Codex> Created or updated `hello.py`.
 mini-codex --workdir ./examples
 ```
 
-Then ask for changes inside that workspace:
+Then ask for changes inside `examples/`:
 
 ```text
 Create a simple calculator script in calculator.py
@@ -52,7 +52,7 @@ mini-codex --version
 ## Use OpenAI
 
 ```bash
-mini-codex --provider openai --model your_model_name
+mini-codex --provider openai --model your-openai-model-id
 ```
 
 Make sure `OPENAI_API_KEY` is set before you run it.

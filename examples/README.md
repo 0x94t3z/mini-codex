@@ -1,9 +1,9 @@
 # Examples
 
-This folder contains small sample workspaces created with Mini Codex.
+This folder contains the sample workspace files we keep with Mini Codex.
 
-Files here are meant to show what the assistant can generate and move around
-inside a workspace.
+The files here show what the assistant can generate, move, and edit inside a
+workspace.
 
 ## Included Samples
 
@@ -19,7 +19,7 @@ You can point Mini Codex at this folder with:
 mini-codex --workdir ./examples
 ```
 
-Then ask for changes inside that workspace, for example:
+Then ask for changes inside `examples/`, for example:
 
 ```text
 Create a new script next to the other examples.

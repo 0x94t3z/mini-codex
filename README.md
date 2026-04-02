@@ -39,7 +39,7 @@ To use OpenAI instead of OpenRouter:
 ```env
 MINI_CODEX_PROVIDER="openai"
 OPENAI_API_KEY="your_openai_api_key_here"
-OPENAI_MODEL="your_model_name"
+OPENAI_MODEL="your-openai-model-id"
 ```
 
 To use Gemini instead of OpenRouter:
@@ -132,10 +132,10 @@ Work inside the bundled examples workspace:
 mini-codex --workdir ./examples --model openrouter/free
 ```
 
-Choose a provider and replace the model with one from that service:
+Choose a provider:
 
 ```bash
-mini-codex --provider openai --model your_model_name
+mini-codex --provider openai --model your-openai-model-id
 ```
 
 ```bash
@@ -158,10 +158,10 @@ Then you can simply run:
 mini-codex
 ```
 
-And override it any time with:
+And override it any time with another folder, like `./docs`:
 
 ```bash
-mini-codex --workdir ./another-folder
+mini-codex --workdir ./docs
 ```
 
 Skip approval prompts:
@@ -249,8 +249,8 @@ mini-codex/
 - `ruff` is configured in `pyproject.toml` for local checks.
 - `pre-commit` runs Ruff and the unit tests before commits.
 - `pre-commit run --all-files` is a handy one-shot check before pushing.
-- `examples/` is for sample workspaces and demo outputs you want to keep in the repository.
-- `examples/README.md` describes the bundled sample workspaces.
+- `examples/` is the bundled sample workspace folder for this repo.
+- `examples/README.md` explains the included sample files and how to use them.
 - `docs/` is for higher-level project notes, starting with the architecture overview.
 - `docs/usage.md` shows a few concrete Mini Codex workflows.
 - `MINI_CODEX_PROVIDER="openai"` switches the app to OpenAI, and `MINI_CODEX_PROVIDER="custom"` supports any OpenAI-compatible endpoint.
