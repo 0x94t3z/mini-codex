@@ -19,7 +19,8 @@ Mini Codex is a small terminal coding assistant built with Python and the OpenAI
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install --upgrade pip setuptools wheel
-python3 -m pip install -e .
+python3 -m pip install -r requirements.lock.txt
+python3 -m pip install -e ".[dev]"
 cp .env.example .env
 mini-codex
 ```
@@ -43,7 +44,8 @@ source .venv/bin/activate
 
 ```bash
 python3 -m pip install --upgrade pip setuptools wheel
-python3 -m pip install -e .
+python3 -m pip install -r requirements.lock.txt
+python3 -m pip install -e ".[dev]"
 ```
 
 3. Create a `.env` file:
@@ -159,6 +161,7 @@ mini-codex/
 ├── README.md
 ├── LICENSE
 ├── pyproject.toml
+├── requirements.lock.txt
 └── .env.example
 ```
 
@@ -171,6 +174,8 @@ mini-codex/
 - If you want a specific free model instead of the router, pass a model like `some-provider/some-model:free`.
 - `.env` is loaded automatically at startup, and existing shell environment variables still win if both are set.
 - If you prefer not to install the CLI entry point, `python3 main.py` still works.
+- `requirements.lock.txt` pins the runtime dependency versions used by the current build.
+- `ruff` is configured in `pyproject.toml` and runs in CI.
 
 ## Safety
 
