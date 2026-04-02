@@ -30,6 +30,21 @@ It is a good fit when you want to:
 - A simple elapsed timer while the model is thinking
 - `mini-codex --version` for quick version checks
 
+## Demo
+
+Add a short screen recording or GIF here once you have one. The most useful
+demo is a simple terminal session that shows Mini Codex:
+
+1. Starting inside a real repo
+2. Creating or editing a file after approval
+3. Answering `/status` or `which model did you use now?` from the real runtime config
+
+Three strong use cases to show in the demo:
+
+- scaffold a new script or folder structure inside `examples/`
+- move or rewrite a file safely inside the workspace
+- explain a real codebase file and then apply a small change to it
+
 ## Quick Start
 
 ```bash
