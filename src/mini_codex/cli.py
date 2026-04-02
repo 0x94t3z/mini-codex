@@ -29,6 +29,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     bootstrap.add_argument(
         "--provider",
         default=os.getenv("MINI_CODEX_PROVIDER", DEFAULT_PROVIDER),
+        choices=SUPPORTED_PROVIDERS,
     )
     bootstrap_args, _ = bootstrap.parse_known_args(argv)
     model_default = default_model_for_provider(bootstrap_args.provider)
@@ -124,6 +125,8 @@ def build_agent(args: argparse.Namespace) -> MiniCodex:
         reasoning_effort=args.reasoning_effort,
         max_tool_rounds=args.max_tool_rounds,
         provider_name=settings.provider_name,
+        api_mode=settings.api_mode,
+        supports_reasoning=settings.supports_reasoning,
     )
     return MiniCodex(client, config)
 

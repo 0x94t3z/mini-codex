@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import threading
 import time
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 from .config import SYSTEM_PROMPT, AppConfig
 from .tools import (
@@ -70,6 +70,11 @@ class MiniCodex:
         self.history = []
 
     def ask(self, user_message: str) -> str:
+        if self.config.api_mode == "chat_completions":
+            return self._ask_chat(user_message)
+        return self._ask_responses(user_message)
+
+    def _ask_responses(self, user_message: str) -> str:
         working_items = [*self.history, {"role": "user", "content": user_message}]
         response = self._create_response(input_items=working_items)
         recent_tool_results: list[tuple[str, dict[str, Any]]] = []
@@ -121,6 +126,62 @@ class MiniCodex:
             working_items = [*working_items, *response_inputs, *tool_outputs]
             response = self._create_response(input_items=working_items)
 
+    def _ask_chat(self, user_message: str) -> str:
+        working_messages = [*self.history, {"role": "user", "content": user_message}]
+        response = self._create_chat_response(messages=working_messages)
+        recent_tool_results: list[tuple[str, dict[str, Any]]] = []
+
+        rounds = 0
+        while True:
+            choice = response.choices[0]
+            message = choice.message
+            tool_calls = list(getattr(message, "tool_calls", []) or [])
+            if not tool_calls:
+                final_text = self._content_to_text(getattr(message, "content", "")).strip() or (
+                    summarize_tool_results(recent_tool_results)
+                )
+                self.history.extend(
+                    [
+                        {"role": "user", "content": user_message},
+                        {"role": "assistant", "content": final_text},
+                    ]
+                )
+                return final_text
+
+            rounds += 1
+            if rounds > self.config.max_tool_rounds:
+                return "Mini Codex stopped because it exceeded the tool-call limit for one turn."
+
+            assistant_item = self._assistant_message_to_history_item(message)
+            if assistant_item is not None:
+                working_messages.append(assistant_item)
+
+            tool_messages = []
+            for tool_call in tool_calls:
+                function = getattr(tool_call, "function", None)
+                parsed_arguments, parse_error = parse_tool_arguments(
+                    getattr(function, "arguments", "")
+                )
+                tool_name = getattr(function, "name", "unknown")
+                if parse_error is None and parsed_arguments is not None:
+                    print(f"Mini Codex> {describe_tool_call(tool_name, parsed_arguments)}...")
+                    tool_result = self._execute_tool(tool_name, json.dumps(parsed_arguments))
+                else:
+                    print(f"Mini Codex> Skipping invalid tool call for {tool_name}.")
+                    tool_result = {"ok": False, "error": parse_error}
+
+                recent_tool_results.append((tool_name, tool_result))
+                tool_messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": tool_call.id,
+                        "content": json.dumps(tool_result),
+                    }
+                )
+
+            working_messages.extend(tool_messages)
+            response = self._create_chat_response(messages=working_messages)
+
     def _create_response(self, input_items: list[dict[str, Any]]) -> Any:
         request: dict[str, Any] = {
             "model": self.config.model,
@@ -128,16 +189,27 @@ class MiniCodex:
             "input": input_items,
             "tools": TOOLS,
             "parallel_tool_calls": False,
-            "reasoning": {"effort": self.config.reasoning_effort},
         }
-        return self._create_response_with_timer(request)
+        if self.config.supports_reasoning:
+            request["reasoning"] = {"effort": self.config.reasoning_effort}
+        return self._call_with_timer(lambda: self.client.responses.create(**request))
 
-    def _create_response_with_timer(self, request: dict[str, Any]) -> Any:
-        result: dict[str, Any] = {"response": None, "error": None}
+    def _create_chat_response(self, messages: list[dict[str, Any]]) -> Any:
+        request: dict[str, Any] = {
+            "model": self.config.model,
+            "messages": messages,
+            "tools": TOOLS,
+        }
+        if self.config.supports_reasoning:
+            request["reasoning"] = {"effort": self.config.reasoning_effort}
+        return self._call_with_timer(lambda: self.client.chat.completions.create(**request))
+
+    def _call_with_timer(self, call: Callable[[], Any]) -> Any:
+        result: dict[str, Any] = {"value": None, "error": None}
 
         def worker() -> None:
             try:
-                result["response"] = self.client.responses.create(**request)
+                result["value"] = call()
             except Exception as exc:  # pragma: no cover - exercised through integration flow
                 result["error"] = exc
 
@@ -159,7 +231,46 @@ class MiniCodex:
         if result["error"] is not None:
             raise result["error"]
 
-        return result["response"]
+        return result["value"]
+
+    def _assistant_message_to_history_item(self, message: Any) -> dict[str, Any]:
+        content = self._content_to_text(getattr(message, "content", ""))
+        history_item: dict[str, Any] = {"role": "assistant", "content": content}
+
+        tool_calls = []
+        for tool_call in getattr(message, "tool_calls", []) or []:
+            function = getattr(tool_call, "function", None)
+            tool_calls.append(
+                {
+                    "id": getattr(tool_call, "id", None),
+                    "type": "function",
+                    "function": {
+                        "name": getattr(function, "name", ""),
+                        "arguments": getattr(function, "arguments", ""),
+                    },
+                }
+            )
+
+        if tool_calls:
+            history_item["tool_calls"] = tool_calls
+
+        return history_item
+
+    def _content_to_text(self, content: Any) -> str:
+        if content is None:
+            return ""
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts: list[str] = []
+            for block in content:
+                block_type = getattr(block, "type", None)
+                if block_type in {"output_text", "input_text"}:
+                    parts.append(getattr(block, "text", ""))
+                elif isinstance(block, dict) and block.get("type") in {"output_text", "input_text"}:
+                    parts.append(str(block.get("text", "")))
+            return "".join(parts)
+        return str(content)
 
     def _execute_tool(self, name: str, arguments_json: str) -> dict[str, Any]:
         arguments, parse_error = parse_tool_arguments(arguments_json)

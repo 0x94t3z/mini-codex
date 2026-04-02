@@ -18,6 +18,8 @@ config stay easy to reason about.
   unless `--auto-approve` is set.
 - Conversation history is stored locally so stateless provider calls still feel
   like a normal chat session.
+- OpenRouter, OpenAI, and xAI use the Responses API path, while Gemini uses the
+  chat-completions path.
 
 ## Why This Layout
 

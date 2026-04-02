@@ -38,6 +38,19 @@ class CliTests(unittest.TestCase):
             self.assertEqual(args.provider, "openai")
             self.assertEqual(args.model, "gpt-test")
 
+    def test_parse_args_uses_gemini_model_default(self) -> None:
+        with patch.dict(
+            "os.environ",
+            {
+                "MINI_CODEX_PROVIDER": "gemini",
+                "GEMINI_MODEL": "gemini-test",
+            },
+            clear=False,
+        ):
+            args = parse_args([])
+            self.assertEqual(args.provider, "gemini")
+            self.assertEqual(args.model, "gemini-test")
+
     @patch("mini_codex.cli.OpenAI")
     def test_build_agent_uses_openrouter_settings(self, mock_openai: object) -> None:
         with patch.dict(
@@ -98,6 +111,54 @@ class CliTests(unittest.TestCase):
         )
         self.assertEqual(agent.config.provider_name, "Custom")
         self.assertEqual(agent.config.model, "custom-model")
+        self.assertEqual(agent.config.api_mode, "responses")
+        self.assertTrue(agent.config.supports_reasoning)
+
+    @patch("mini_codex.cli.OpenAI")
+    def test_build_agent_uses_gemini_settings(self, mock_openai: object) -> None:
+        with patch.dict(
+            "os.environ",
+            {
+                "MINI_CODEX_PROVIDER": "gemini",
+                "GEMINI_API_KEY": "gemini-key",
+                "GEMINI_MODEL": "gemini-test",
+            },
+            clear=False,
+        ):
+            args = parse_args([])
+            agent = build_agent(args)
+
+        mock_openai.assert_called_once_with(
+            api_key="gemini-key",
+            base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+        )
+        self.assertEqual(agent.config.provider_name, "Gemini")
+        self.assertEqual(agent.config.model, "gemini-test")
+        self.assertEqual(agent.config.api_mode, "chat_completions")
+        self.assertFalse(agent.config.supports_reasoning)
+
+    @patch("mini_codex.cli.OpenAI")
+    def test_build_agent_uses_xai_settings(self, mock_openai: object) -> None:
+        with patch.dict(
+            "os.environ",
+            {
+                "MINI_CODEX_PROVIDER": "xai",
+                "XAI_API_KEY": "xai-key",
+                "XAI_MODEL": "grok-4.20-beta-latest-non-reasoning",
+            },
+            clear=False,
+        ):
+            args = parse_args([])
+            agent = build_agent(args)
+
+        mock_openai.assert_called_once_with(
+            api_key="xai-key",
+            base_url="https://api.x.ai/v1",
+        )
+        self.assertEqual(agent.config.provider_name, "xAI")
+        self.assertEqual(agent.config.model, "grok-4.20-beta-latest-non-reasoning")
+        self.assertEqual(agent.config.api_mode, "responses")
+        self.assertFalse(agent.config.supports_reasoning)
 
     def test_parse_args_version_flag_prints_version(self) -> None:
         output = StringIO()

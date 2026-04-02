@@ -1,6 +1,6 @@
 # Mini Codex
 
-Mini Codex is a small terminal coding assistant built with Python and the OpenAI SDK. It defaults to OpenRouter, but you can switch to OpenAI or another OpenAI-compatible provider with environment variables or `--provider`. It keeps conversation state locally between turns, can inspect files in a workspace, and asks before it writes files or runs commands.
+Mini Codex is a small terminal coding assistant built with Python and the OpenAI SDK. It defaults to OpenRouter, but you can switch to OpenAI, Gemini, xAI, or another OpenAI-compatible provider with environment variables or `--provider`. It keeps conversation state locally between turns, can inspect files in a workspace, and asks before it writes files or runs commands.
 
 ## Features
 
@@ -11,7 +11,7 @@ Mini Codex is a small terminal coding assistant built with Python and the OpenAI
 - run non-shell commands like `python3 -m unittest` after approval
 - continue a conversation across multiple turns
 - use OpenRouter's free router by default
-- switch to OpenAI or another OpenAI-compatible provider with env vars or `--provider`
+- switch to OpenAI, Gemini, xAI, or another OpenAI-compatible provider with env vars or `--provider`
 - show a simple elapsed timer while the model is thinking
 - print the current CLI version with `mini-codex --version`
 
@@ -40,6 +40,22 @@ To use OpenAI instead of OpenRouter:
 MINI_CODEX_PROVIDER="openai"
 OPENAI_API_KEY="your_openai_api_key_here"
 OPENAI_MODEL="your_model_name"
+```
+
+To use Gemini instead of OpenRouter:
+
+```env
+MINI_CODEX_PROVIDER="gemini"
+GEMINI_API_KEY="your_gemini_api_key_here"
+GEMINI_MODEL="gemini-2.5-flash"
+```
+
+To use xAI instead of OpenRouter:
+
+```env
+MINI_CODEX_PROVIDER="xai"
+XAI_API_KEY="your_xai_api_key_here"
+XAI_MODEL="grok-4.20-beta-latest-non-reasoning"
 ```
 
 ## Setup
@@ -111,6 +127,14 @@ Choose a provider:
 
 ```bash
 mini-codex --provider openai --model your_model_name
+```
+
+```bash
+mini-codex --provider gemini --model gemini-2.5-flash
+```
+
+```bash
+mini-codex --provider xai --model grok-4.20-beta-latest-non-reasoning
 ```
 
 Set a default workspace in `.env`:
@@ -202,10 +226,12 @@ mini-codex/
 - `run_command` uses argument parsing instead of a full shell, so operators like `|`, `&&`, and redirects are not supported.
 - The default model is `openrouter/free`, which OpenRouter documents as a zero-cost router for currently available free models.
 - You can switch providers with `MINI_CODEX_PROVIDER` or `--provider`. OpenAI
-  uses `OPENAI_API_KEY` and `OPENAI_MODEL`, while other OpenAI-compatible
-  providers can use `MINI_CODEX_API_KEY`, `MINI_CODEX_BASE_URL`, and
-  `MINI_CODEX_MODEL`.
-- OpenRouter's Responses API is treated as stateless here, so Mini Codex stores chat history locally and resends it each turn.
+  uses `OPENAI_API_KEY` and `OPENAI_MODEL`, Gemini uses `GEMINI_API_KEY` and
+  `GEMINI_MODEL`, xAI uses `XAI_API_KEY` and `XAI_MODEL`, and other
+  OpenAI-compatible providers can use `MINI_CODEX_API_KEY`,
+  `MINI_CODEX_BASE_URL`, and `MINI_CODEX_MODEL`.
+- OpenRouter, OpenAI, and xAI use the Responses API path here, while Gemini
+  uses the chat-completions path.
 - If you want a specific free model instead of the router, pass a model like `some-provider/some-model:free`.
 - `.env` is loaded automatically at startup, and existing shell environment variables still win if both are set.
 - If you prefer not to install the CLI entry point, `python3 main.py` still works.

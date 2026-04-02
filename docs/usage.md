@@ -56,3 +56,19 @@ mini-codex --provider openai --model your_model_name
 ```
 
 Make sure `OPENAI_API_KEY` is set before you run it.
+
+## Use Gemini
+
+```bash
+mini-codex --provider gemini --model gemini-2.5-flash
+```
+
+Make sure `GEMINI_API_KEY` is set before you run it.
+
+## Use xAI
+
+```bash
+mini-codex --provider xai --model grok-4.20-beta-latest-non-reasoning
+```
+
+Make sure `XAI_API_KEY` is set before you run it.
