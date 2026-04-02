@@ -22,6 +22,7 @@ source .venv/bin/activate
 python3 -m pip install --upgrade pip setuptools wheel
 python3 -m pip install -r requirements.lock.txt
 python3 -m pip install -e ".[dev]"
+pre-commit install
 cp .env.example .env
 mini-codex
 ```
@@ -47,6 +48,13 @@ source .venv/bin/activate
 python3 -m pip install --upgrade pip setuptools wheel
 python3 -m pip install -r requirements.lock.txt
 python3 -m pip install -e ".[dev]"
+pre-commit install
+```
+
+You can run the full hook set anytime with:
+
+```bash
+pre-commit run --all-files
 ```
 
 3. Create a `.env` file:
@@ -178,6 +186,8 @@ mini-codex/
 - If you prefer not to install the CLI entry point, `python3 main.py` still works.
 - `requirements.lock.txt` pins the runtime dependency versions used by the current build.
 - `ruff` is configured in `pyproject.toml` for local checks.
+- `pre-commit` runs Ruff and the unit tests before commits.
+- `pre-commit run --all-files` is a handy one-shot check before pushing.
 - `examples/` is for sample workspaces and demo outputs you want to keep in the repository.
 - Release notes live in [CHANGELOG.md](/Users/0xgets/Documents/Python/mini-codex/CHANGELOG.md).
 
