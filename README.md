@@ -257,7 +257,7 @@ mini-codex/
 - `docs/` is for higher-level project notes, starting with the architecture overview.
 - `docs/usage.md` shows a few concrete Mini Codex workflows.
 - `MINI_CODEX_PROVIDER="openai"` switches the app to OpenAI, and `MINI_CODEX_PROVIDER="custom"` supports any OpenAI-compatible endpoint.
-- Release notes live in [CHANGELOG.md](/Users/0xgets/Documents/Python/mini-codex/CHANGELOG.md).
+- Release notes live in [CHANGELOG.md](CHANGELOG.md).
 
 ## Safety
 
@@ -267,4 +267,4 @@ mini-codex/
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](/Users/0xgets/Documents/Python/mini-codex/LICENSE).
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
