@@ -1,6 +1,12 @@
 # Mini Codex
 
-Mini Codex is a small terminal coding assistant built with Python and the OpenAI SDK. It defaults to OpenRouter, but you can switch to OpenAI, Gemini, xAI, or another OpenAI-compatible provider with environment variables or `--provider`. It keeps conversation state locally between turns, can inspect files in a workspace, and asks before it writes files or runs commands.
+Mini Codex is a terminal coding assistant for working inside a scoped
+workspace. It starts on OpenRouter, but you can switch to OpenAI, Gemini, xAI,
+or another OpenAI-compatible provider with environment variables or
+`--provider`.
+
+It keeps conversation state locally between turns, can inspect files in the
+selected workspace, and asks before it writes files or runs commands.
 
 ## Features
 
