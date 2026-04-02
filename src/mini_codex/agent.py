@@ -7,7 +7,6 @@ from typing import Any, Optional
 
 from .config import AppConfig, SYSTEM_PROMPT
 from .tools import (
-    TOOLS,
     coerce_optional_int,
     create_directory,
     delete_text_file,
@@ -19,6 +18,7 @@ from .tools import (
     read_text_file,
     run_command,
     summarize_tool_results,
+    TOOLS,
     write_text_file,
 )
 
