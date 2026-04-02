@@ -28,6 +28,7 @@ jobs:
         run: ruff check .
 
   test:
+    name: Test (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
