@@ -15,6 +15,7 @@ from mini_codex.cli import (  # noqa: E402
     build_agent,
     format_status,
     looks_like_status_question,
+    maybe_resolve_local_response,
     parse_args,
 )
 
@@ -215,6 +216,28 @@ class CliTests(unittest.TestCase):
         self.assertTrue(looks_like_status_question("which model are you using?"))
         self.assertTrue(looks_like_status_question("what provider and model are we using"))
         self.assertFalse(looks_like_status_question("create a calculator in examples"))
+
+    def test_maybe_resolve_local_response_handles_status_requests(self) -> None:
+        agent = type(
+            "Agent",
+            (),
+            {
+                "config": type(
+                    "Config",
+                    (),
+                    {
+                        "provider_name": "OpenRouter",
+                        "model": "openrouter/free",
+                        "workdir": Path("/tmp/workspace"),
+                    },
+                )()
+            },
+        )()
+
+        response = maybe_resolve_local_response(agent, "which model did you use now?")
+        self.assertIsNotNone(response)
+        self.assertIn("provider: OpenRouter", response)
+        self.assertIn("model: openrouter/free", response)
 
 
 if __name__ == "__main__":

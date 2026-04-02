@@ -28,7 +28,9 @@ STATUS_QUERIES = (
     "what model are you using",
     "which provider are you using",
     "what provider are you using",
+    "which model did you use",
     "what model did you use",
+    "which provider did you use",
     "what provider and model are we using",
     "what provider and model are you using",
     "what are you using",
@@ -192,6 +194,12 @@ def looks_like_status_question(text: str) -> bool:
     return any(query in normalized for query in STATUS_QUERIES)
 
 
+def maybe_resolve_local_response(agent: MiniCodex, raw_text: str) -> str | None:
+    if looks_like_status_question(raw_text):
+        return format_status(agent)
+    return None
+
+
 def handle_local_command(agent: MiniCodex, raw_text: str) -> bool:
     command = raw_text.strip().lower()
     if command in {"/quit", "\\quit"}:
@@ -230,8 +238,9 @@ def interactive_loop(agent: MiniCodex) -> None:
                 return
             continue
 
-        if looks_like_status_question(user_message):
-            print(format_status(agent))
+        local_response = maybe_resolve_local_response(agent, user_message)
+        if local_response is not None:
+            print(local_response)
             continue
 
         try:
@@ -250,6 +259,10 @@ def main() -> None:
 
     if args.prompt:
         prompt = " ".join(args.prompt)
+        local_response = maybe_resolve_local_response(agent, prompt)
+        if local_response is not None:
+            print(local_response)
+            return
         print(agent.ask(prompt))
         return
 
