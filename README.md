@@ -94,7 +94,7 @@ Then set your key in `.env`:
 OPENROUTER_API_KEY="your_api_key_here"
 ```
 
-Optional:
+Optional settings:
 
 ```env
 MINI_CODEX_PROVIDER="openrouter"
@@ -102,6 +102,15 @@ MINI_CODEX_MODEL="openrouter/free"
 MINI_CODEX_WORKDIR="."
 OPENROUTER_BASE_URL="https://openrouter.ai/api/v1"
 ```
+
+`MINI_CODEX_WORKDIR` is the default folder Mini Codex works in when you do not
+pass `--workdir`. For example, if you set:
+
+```env
+MINI_CODEX_WORKDIR="./flask-ui"
+```
+
+then running `mini-codex` will open that folder by default.
 
 ## Run it
 
