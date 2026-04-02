@@ -4,6 +4,7 @@ Simple command-line calculator.
 Supports addition, subtraction, multiplication, division.
 """
 
+
 def add(a, b):
     return a + b
 
@@ -18,17 +19,18 @@ def div(a, b):
         raise ValueError("Division by zero!")
     return a / b
 
+
 def main():
     operations = {
-        '+': add,
-        '-': sub,
-        '*': mul,
-        '/': div,
+        "+": add,
+        "-": sub,
+        "*": mul,
+        "/": div,
     }
 
     while True:
         expr = input("Enter expression (or 'quit' to exit): ").strip()
-        if expr.lower() == 'quit':
+        if expr.lower() == "quit":
             print("Goodbye!")
             break
 
@@ -48,6 +50,7 @@ def main():
             print(f"Result: {result}")
         except Exception as e:
             print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     main()

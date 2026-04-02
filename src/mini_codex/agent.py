@@ -13,8 +13,8 @@ from .tools import (
     delete_text_file,
     describe_tool_call,
     format_elapsed,
-    list_files,
     move_text_file,
+    list_files,
     parse_tool_arguments,
     read_text_file,
     run_command,
@@ -78,7 +78,9 @@ class MiniCodex:
         while True:
             function_calls = [item for item in response.output if item.type == "function_call"]
             if not function_calls:
-                final_text = response.output_text.strip() or summarize_tool_results(recent_tool_results)
+                final_text = response.output_text.strip() or summarize_tool_results(
+                    recent_tool_results
+                )
                 self.history.extend(
                     [
                         {"role": "user", "content": user_message},

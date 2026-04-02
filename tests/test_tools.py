@@ -149,7 +149,11 @@ class WorkspaceToolTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             dotenv_path = Path(tmp) / ".env"
             dotenv_path.write_text(
-                "# comment\nOPENROUTER_API_KEY=\"test-key\"\nexport MINI_CODEX_MODEL=openrouter/free\n",
+                (
+                    "# comment\n"
+                    "OPENROUTER_API_KEY=\"test-key\"\n"
+                    "export MINI_CODEX_MODEL=openrouter/free\n"
+                ),
                 encoding="utf-8",
             )
 

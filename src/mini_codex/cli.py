@@ -16,13 +16,15 @@ from .config import (
     DEFAULT_MODEL,
     DEFAULT_OPENROUTER_BASE_URL,
     DEFAULT_REASONING_EFFORT,
-    MAX_TOOL_ROUNDS,
     load_dotenv_file,
+    MAX_TOOL_ROUNDS,
 )
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Mini Codex: a tiny coding assistant in your terminal.")
+    parser = argparse.ArgumentParser(
+        description="Mini Codex: a tiny coding assistant in your terminal."
+    )
     parser.add_argument(
         "prompt",
         nargs="*",
@@ -61,7 +63,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def ensure_runtime_ready() -> None:
     if OpenAI is None:
         print(
-            "The OpenAI SDK is not installed. Run 'python3 -m pip install -r requirements.txt' first.",
+            "The OpenAI SDK is not installed. Run "
+            "'python3 -m pip install -r requirements.txt' first.",
             file=sys.stderr,
         )
         raise SystemExit(1)

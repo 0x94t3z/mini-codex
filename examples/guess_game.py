@@ -1,5 +1,6 @@
 import random
 
+
 def main():
     print("Welcome to the Number Guessing Game!")
     number = random.randint(1, 100)
@@ -18,6 +19,7 @@ def main():
         else:
             print(f"Congratulations! You guessed the number in {attempts} attempts.")
             break
+
 
 if __name__ == "__main__":
     main()
