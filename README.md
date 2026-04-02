@@ -129,6 +129,12 @@ Read main.py and explain how tool approvals work
 
 ```text
 mini-codex/
+├── src/
+│   └── mini_codex/
+│       ├── agent.py
+│       ├── cli.py
+│       ├── config.py
+│       └── tools.py
 ├── main.py
 ├── tests/
 ├── README.md

@@ -1,17 +1,18 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 setup(
     name="mini-codex",
     version="0.1.0",
     description="A small terminal coding assistant powered by OpenRouter.",
-    py_modules=["main"],
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     install_requires=[
         "openai>=2.0.0,<3.0.0",
     ],
     entry_points={
         "console_scripts": [
-            "mini-codex=main:main",
+            "mini-codex=mini_codex.cli:main",
         ]
     },
 )

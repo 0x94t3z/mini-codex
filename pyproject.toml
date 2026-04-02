@@ -13,7 +13,10 @@ dependencies = [
 ]
 
 [project.scripts]
-mini-codex = "main:main"
+mini-codex = "mini_codex.cli:main"
 
 [tool.setuptools]
-py-modules = ["main"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

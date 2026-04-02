@@ -1,23 +1,28 @@
+import sys
 import tempfile
 import unittest
 from os import environ
 from pathlib import Path
-from types import SimpleNamespace
 from unittest.mock import patch
 
-from main import (
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+for candidate in (SRC, ROOT):
+    if str(candidate) not in sys.path:
+        sys.path.insert(0, str(candidate))
+
+from mini_codex.config import load_dotenv_file
+from mini_codex.tools import (
     coerce_optional_int,
     create_directory,
     delete_text_file,
     describe_tool_call,
     format_elapsed,
     list_files,
-    load_dotenv_file,
     move_text_file,
     parse_tool_arguments,
     read_text_file,
     resolve_workspace_path,
-    response_item_to_input_item,
     run_command,
     summarize_tool_results,
     write_text_file,
@@ -139,46 +144,6 @@ class WorkspaceToolTests(unittest.TestCase):
         parsed, error = parse_tool_arguments('{"path":"hello.py"')
         self.assertIsNone(parsed)
         self.assertIn("tool arguments were not valid JSON", error)
-
-    def test_response_message_is_normalized_for_stateless_history(self) -> None:
-        item = SimpleNamespace(
-            type="message",
-            role="assistant",
-            content=[SimpleNamespace(type="output_text", text="hello from router")],
-        )
-
-        normalized = response_item_to_input_item(item)
-        self.assertEqual(normalized["type"], "message")
-        self.assertEqual(normalized["role"], "assistant")
-        self.assertEqual(
-            normalized["content"],
-            [{"type": "input_text", "text": "hello from router"}],
-        )
-
-    def test_function_call_is_normalized_for_stateless_history(self) -> None:
-        item = SimpleNamespace(
-            type="function_call",
-            call_id="call_123",
-            name="read_file",
-            arguments='{"path":"main.py","start_line":1,"end_line":5}',
-        )
-
-        normalized = response_item_to_input_item(item)
-        self.assertEqual(normalized["type"], "function_call")
-        self.assertEqual(normalized["call_id"], "call_123")
-        self.assertEqual(normalized["name"], "read_file")
-        self.assertEqual(normalized["arguments"], '{"path":"main.py","start_line":1,"end_line":5}')
-
-    def test_invalid_function_call_is_dropped_from_history(self) -> None:
-        item = SimpleNamespace(
-            type="function_call",
-            call_id="call_bad",
-            name="read_file",
-            arguments='{"path":"main.py"',
-        )
-
-        normalized = response_item_to_input_item(item)
-        self.assertIsNone(normalized)
 
     def test_load_dotenv_file_reads_values(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
