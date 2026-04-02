@@ -173,6 +173,7 @@ mini-codex/
 ├── docs/
 │   ├── README.md
 │   └── architecture.md
+│   └── usage.md
 ├── LICENSE
 ├── pyproject.toml
 ├── requirements.lock.txt
@@ -195,6 +196,7 @@ mini-codex/
 - `examples/` is for sample workspaces and demo outputs you want to keep in the repository.
 - `examples/README.md` describes the bundled sample workspaces.
 - `docs/` is for higher-level project notes, starting with the architecture overview.
+- `docs/usage.md` shows a few concrete Mini Codex workflows.
 - Release notes live in [CHANGELOG.md](/Users/0xgets/Documents/Python/mini-codex/CHANGELOG.md).
 
 ## Safety
