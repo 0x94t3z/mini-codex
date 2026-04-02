@@ -23,6 +23,20 @@ from .config import (
 )
 from .version import VERSION
 
+STATUS_QUERIES = (
+    "which model are you using",
+    "what model are you using",
+    "which provider are you using",
+    "what provider are you using",
+    "what model did you use",
+    "what provider and model are we using",
+    "what provider and model are you using",
+    "what are you using",
+    "what is that",
+    "who are you",
+    "tell me about yourself",
+)
+
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     bootstrap = argparse.ArgumentParser(add_help=False)
@@ -150,7 +164,32 @@ def print_welcome(config: AppConfig) -> None:
     print(f"provider: {config.provider_name}")
     print(f"workspace: {config.workdir}")
     print(f"model: {config.model}")
-    print("commands: /help, /reset, /quit")
+    print("commands: /help, /reset, /status, /quit")
+
+
+def format_status(agent: MiniCodex) -> str:
+    config = agent.config
+    lines = [
+        f"provider: {config.provider_name}",
+        f"model: {config.model}",
+        f"workspace: {config.workdir}",
+    ]
+    if config.provider_name == "OpenRouter":
+        lines.append("route: OpenRouter free router or your selected OpenRouter model")
+    elif config.provider_name == "Gemini":
+        lines.append("route: Gemini chat-completions endpoint")
+    elif config.provider_name == "xAI":
+        lines.append("route: xAI Responses endpoint")
+    elif config.provider_name == "OpenAI":
+        lines.append("route: OpenAI Responses endpoint")
+    else:
+        lines.append("route: custom OpenAI-compatible endpoint")
+    return "\n".join(lines)
+
+
+def looks_like_status_question(text: str) -> bool:
+    normalized = " ".join(text.strip().lower().split())
+    return any(query in normalized for query in STATUS_QUERIES)
 
 
 def handle_local_command(agent: MiniCodex, raw_text: str) -> bool:
@@ -161,9 +200,13 @@ def handle_local_command(agent: MiniCodex, raw_text: str) -> bool:
         agent.reset()
         print("Conversation state cleared.")
         return True
+    if command in {"/status", "\\status", "/about", "\\about"}:
+        print(format_status(agent))
+        return True
     if command in {"/help", "\\help"}:
         print("Type a coding request and press enter.")
         print("/reset clears the conversation.")
+        print("/status shows the configured provider, model, and workspace.")
         print("/quit exits Mini Codex.")
         return True
     print(f"Unknown local command: {raw_text}")
@@ -185,6 +228,10 @@ def interactive_loop(agent: MiniCodex) -> None:
         if user_message.startswith("/") or user_message.startswith("\\"):
             if not handle_local_command(agent, user_message):
                 return
+            continue
+
+        if looks_like_status_question(user_message):
+            print(format_status(agent))
             continue
 
         try:

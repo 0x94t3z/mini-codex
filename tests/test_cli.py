@@ -11,7 +11,12 @@ for candidate in (SRC, ROOT):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
-from mini_codex.cli import build_agent, parse_args  # noqa: E402
+from mini_codex.cli import (  # noqa: E402
+    build_agent,
+    format_status,
+    looks_like_status_question,
+    parse_args,
+)
 
 
 class CliTests(unittest.TestCase):
@@ -182,6 +187,34 @@ class CliTests(unittest.TestCase):
         self.assertIn("Examples:", text)
         self.assertIn("--provider gemini --model gemini-2.5-flash", text)
         self.assertIn("--provider xai --model grok-4.20-beta-latest-non-reasoning", text)
+
+    def test_format_status_shows_runtime_details(self) -> None:
+        agent = type(
+            "Agent",
+            (),
+            {
+                "config": type(
+                    "Config",
+                    (),
+                    {
+                        "provider_name": "OpenRouter",
+                        "model": "openrouter/free",
+                        "workdir": Path("/tmp/workspace"),
+                    },
+                )()
+            },
+        )()
+
+        status = format_status(agent)
+        self.assertIn("provider: OpenRouter", status)
+        self.assertIn("model: openrouter/free", status)
+        self.assertIn("workspace: /tmp/workspace", status)
+        self.assertIn("route: OpenRouter free router", status)
+
+    def test_looks_like_status_question_detects_meta_questions(self) -> None:
+        self.assertTrue(looks_like_status_question("which model are you using?"))
+        self.assertTrue(looks_like_status_question("what provider and model are we using"))
+        self.assertFalse(looks_like_status_question("create a calculator in examples"))
 
 
 if __name__ == "__main__":
