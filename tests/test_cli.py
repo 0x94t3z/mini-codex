@@ -177,7 +177,9 @@ class CliTests(unittest.TestCase):
 
         self.assertEqual(exc_info.exception.code, 0)
         text = output.getvalue()
-        self.assertIn("Provider examples:", text)
+        self.assertIn("Providers:", text)
+        self.assertIn("openrouter  Default option.", text)
+        self.assertIn("Examples:", text)
         self.assertIn("--provider gemini --model gemini-2.5-flash", text)
         self.assertIn("--provider xai --model grok-4.20-beta-latest-non-reasoning", text)
 
