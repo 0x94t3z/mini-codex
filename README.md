@@ -1,12 +1,24 @@
 # Mini Codex
 
-Mini Codex is a terminal coding assistant for working inside a scoped
-workspace. It starts on OpenRouter, but you can switch to OpenAI, Gemini, xAI,
-or another OpenAI-compatible provider with environment variables or
-`--provider`.
+Mini Codex is a lightweight terminal coding assistant that works inside your
+repo, not around it. It gives you workspace-scoped file tools, safe command
+execution, and multi-provider support in one small CLI.
 
-It keeps conversation state locally between turns, can inspect files in the
-selected workspace, and asks before it writes files or runs commands.
+It starts on OpenRouter, but you can switch to OpenAI, Gemini, xAI, or another
+OpenAI-compatible provider with environment variables or `--provider`.
+
+## Why Mini Codex
+
+Mini Codex is built for quick, focused coding tasks where you want an assistant
+that can inspect the codebase, make edits, and stay inside a safe workspace.
+
+It is a good fit when you want to:
+
+- make small or medium code changes without leaving the terminal
+- keep file access scoped to one folder
+- switch between hosted providers without changing your workflow
+- ask the assistant to explain or edit real files in the repo
+- keep tool use explicit, readable, and approval-driven
 
 ## Features
 
