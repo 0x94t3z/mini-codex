@@ -32,6 +32,8 @@ It is a good fit when you want to:
 
 ## Demo
 
+![Mini Codex demo](assets/mini-codex-demo.gif)
+
 In a short terminal clip, Mini Codex shows:
 
 1. Starting inside a real repo
@@ -247,6 +249,8 @@ mini-codex/
 │       ├── providers.py
 │       └── tools.py
 ├── main.py
+├── assets/
+│   └── mini-codex-demo.gif
 ├── examples/
 │   └── README.md
 ├── tests/
