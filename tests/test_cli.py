@@ -9,7 +9,7 @@ for candidate in (SRC, ROOT):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
-from mini_codex.cli import parse_args
+from mini_codex.cli import parse_args  # noqa: E402
 
 
 class CliTests(unittest.TestCase):

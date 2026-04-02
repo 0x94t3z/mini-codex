@@ -195,7 +195,8 @@ def run_command(workdir: Path, command: str, timeout_seconds: Optional[int]) -> 
     unsupported_tokens = ["|", "&&", "||", ">", "<"]
     if any(token in command for token in unsupported_tokens):
         raise ValueError(
-            "run_command does not support shell operators or redirection; use a plain executable and arguments"
+            "run_command does not support shell operators or redirection; use a "
+            "plain executable and arguments"
         )
 
     parts = shlex.split(command)
@@ -246,7 +247,8 @@ TOOLS: list[dict[str, Any]] = [
             "properties": {
                 "path": {
                     "type": "string",
-                    "description": "Directory path relative to the workspace root. Use '.' for the root.",
+                    "description": "Directory path relative to the workspace root. "
+                    "Use '.' for the root.",
                 },
                 "limit": {
                     "type": ["integer", "null"],
@@ -340,7 +342,8 @@ TOOLS: list[dict[str, Any]] = [
     {
         "type": "function",
         "name": "move_file",
-        "description": "Move or rename a file inside the workspace. Creates parent directories when needed.",
+        "description": "Move or rename a file inside the workspace. Creates parent "
+        "directories when needed.",
         "strict": True,
         "parameters": {
             "type": "object",
@@ -397,9 +400,12 @@ def describe_tool_call(name: str, arguments: dict[str, Any]) -> str:
     if name == "create_directory":
         return f"Creating folder {arguments.get('path', 'folder')}"
     if name == "move_file":
-        return f"Moving {arguments.get('source_path', 'file')} to {arguments.get('destination_path', 'destination')}"
+        source = arguments.get("source_path", "file")
+        destination = arguments.get("destination_path", "destination")
+        return f"Moving {source} to {destination}"
     if name == "run_command":
-        return f"Running {arguments.get('command', 'command')}"
+        command = arguments.get("command", "command")
+        return f"Running {command}"
     return f"Using tool {name}"
 
 

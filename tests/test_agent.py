@@ -9,7 +9,7 @@ for candidate in (SRC, ROOT):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
-from mini_codex.agent import response_item_to_input_item
+from mini_codex.agent import response_item_to_input_item  # noqa: E402
 
 
 class AgentHelperTests(unittest.TestCase):

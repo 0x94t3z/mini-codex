@@ -1,4 +1,6 @@
-from setuptools import setup, find_packages
+# ruff: noqa: I001
+
+from setuptools import find_packages, setup
 
 
 setup(

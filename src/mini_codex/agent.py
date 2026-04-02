@@ -7,18 +7,18 @@ from typing import Any, Optional
 
 from .config import AppConfig, SYSTEM_PROMPT
 from .tools import (
-    TOOLS,
     coerce_optional_int,
     create_directory,
     delete_text_file,
     describe_tool_call,
     format_elapsed,
-    move_text_file,
     list_files,
+    move_text_file,
     parse_tool_arguments,
     read_text_file,
     run_command,
     summarize_tool_results,
+    TOOLS,
     write_text_file,
 )
 
@@ -52,8 +52,8 @@ def response_item_to_input_item(item: Any) -> Optional[dict[str, Any]]:
             return None
         return {
             "type": "function_call",
-            "call_id": getattr(item, "call_id"),
-            "name": getattr(item, "name"),
+            "call_id": item.call_id,
+            "name": item.name,
             "arguments": json.dumps(parsed_arguments, separators=(",", ":")),
         }
 
