@@ -12,12 +12,12 @@ except ImportError:  # pragma: no cover - exercised in runtime setup, not tests
 
 from .agent import MiniCodex
 from .config import (
-    AppConfig,
     DEFAULT_MODEL,
     DEFAULT_OPENROUTER_BASE_URL,
     DEFAULT_REASONING_EFFORT,
-    load_dotenv_file,
     MAX_TOOL_ROUNDS,
+    AppConfig,
+    load_dotenv_file,
 )
 
 
