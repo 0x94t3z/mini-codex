@@ -19,6 +19,7 @@ from .config import (
     AppConfig,
     load_dotenv_file,
 )
+from .version import VERSION
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -56,6 +57,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--auto-approve",
         action="store_true",
         help="Automatically approve file writes and command execution.",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"Mini Codex {VERSION}",
     )
     return parser.parse_args(argv)
 

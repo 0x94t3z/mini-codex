@@ -12,6 +12,7 @@ Mini Codex is a small terminal coding assistant built with Python and the OpenAI
 - continue a conversation across multiple turns
 - use OpenRouter's free router by default
 - show a simple elapsed timer while the model is thinking
+- print the current CLI version with `mini-codex --version`
 
 ## Quick Start
 
@@ -176,8 +177,9 @@ mini-codex/
 - `.env` is loaded automatically at startup, and existing shell environment variables still win if both are set.
 - If you prefer not to install the CLI entry point, `python3 main.py` still works.
 - `requirements.lock.txt` pins the runtime dependency versions used by the current build.
-- `ruff` is configured in `pyproject.toml` and runs in CI.
+- `ruff` is configured in `pyproject.toml` for local checks.
 - `examples/` is for sample workspaces and demo outputs you want to keep in the repository.
+- Release notes live in [CHANGELOG.md](/Users/0xgets/Documents/Python/mini-codex/CHANGELOG.md).
 
 ## Safety
 

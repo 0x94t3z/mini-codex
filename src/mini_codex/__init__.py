@@ -1,5 +1,5 @@
 """Mini Codex package."""
 
-__all__ = ["__version__"]
+from .version import VERSION as __version__
 
-__version__ = "0.1.0"
+__all__ = ["__version__"]

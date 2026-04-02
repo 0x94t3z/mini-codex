@@ -1,5 +1,7 @@
 import sys
 import unittest
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
@@ -22,6 +24,15 @@ class CliTests(unittest.TestCase):
         with patch.dict("os.environ", {"MINI_CODEX_WORKDIR": "./flask-ui"}, clear=False):
             args = parse_args(["--workdir", "./api-ui"])
             self.assertEqual(args.workdir, "./api-ui")
+
+    def test_parse_args_version_flag_prints_version(self) -> None:
+        output = StringIO()
+        with redirect_stdout(output):
+            with self.assertRaises(SystemExit) as exc_info:
+                parse_args(["--version"])
+
+        self.assertEqual(exc_info.exception.code, 0)
+        self.assertIn("Mini Codex 0.1.0", output.getvalue())
 
 
 if __name__ == "__main__":
