@@ -48,3 +48,11 @@ Mini Codex will usually create the target folder if it needs to.
 ```bash
 mini-codex --version
 ```
+
+## Use OpenAI
+
+```bash
+mini-codex --provider openai --model your_model_name
+```
+
+Make sure `OPENAI_API_KEY` is set before you run it.

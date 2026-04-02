@@ -1,6 +1,6 @@
 # Mini Codex
 
-Mini Codex is a small terminal coding assistant built with Python and the OpenAI SDK, configured to call OpenRouter's Responses API. It keeps conversation state locally between turns, can inspect files in a workspace, and asks before it writes files or runs commands.
+Mini Codex is a small terminal coding assistant built with Python and the OpenAI SDK. It defaults to OpenRouter, but you can switch to OpenAI or another OpenAI-compatible provider with environment variables or `--provider`. It keeps conversation state locally between turns, can inspect files in a workspace, and asks before it writes files or runs commands.
 
 ## Features
 
@@ -11,6 +11,7 @@ Mini Codex is a small terminal coding assistant built with Python and the OpenAI
 - run non-shell commands like `python3 -m unittest` after approval
 - continue a conversation across multiple turns
 - use OpenRouter's free router by default
+- switch to OpenAI or another OpenAI-compatible provider with env vars or `--provider`
 - show a simple elapsed timer while the model is thinking
 - print the current CLI version with `mini-codex --version`
 
@@ -31,6 +32,14 @@ Set your key in `.env`:
 
 ```env
 OPENROUTER_API_KEY="your_api_key_here"
+```
+
+To use OpenAI instead of OpenRouter:
+
+```env
+MINI_CODEX_PROVIDER="openai"
+OPENAI_API_KEY="your_openai_api_key_here"
+OPENAI_MODEL="your_model_name"
 ```
 
 ## Setup
@@ -72,6 +81,7 @@ OPENROUTER_API_KEY="your_api_key_here"
 Optional:
 
 ```env
+MINI_CODEX_PROVIDER="openrouter"
 MINI_CODEX_MODEL="openrouter/free"
 MINI_CODEX_WORKDIR="."
 OPENROUTER_BASE_URL="https://openrouter.ai/api/v1"
@@ -95,6 +105,12 @@ Choose a workspace and model:
 
 ```bash
 mini-codex --workdir . --model openrouter/free
+```
+
+Choose a provider:
+
+```bash
+mini-codex --provider openai --model your_model_name
 ```
 
 Set a default workspace in `.env`:
@@ -185,6 +201,10 @@ mini-codex/
 - File access is restricted to the workspace root you pass with `--workdir`.
 - `run_command` uses argument parsing instead of a full shell, so operators like `|`, `&&`, and redirects are not supported.
 - The default model is `openrouter/free`, which OpenRouter documents as a zero-cost router for currently available free models.
+- You can switch providers with `MINI_CODEX_PROVIDER` or `--provider`. OpenAI
+  uses `OPENAI_API_KEY` and `OPENAI_MODEL`, while other OpenAI-compatible
+  providers can use `MINI_CODEX_API_KEY`, `MINI_CODEX_BASE_URL`, and
+  `MINI_CODEX_MODEL`.
 - OpenRouter's Responses API is treated as stateless here, so Mini Codex stores chat history locally and resends it each turn.
 - If you want a specific free model instead of the router, pass a model like `some-provider/some-model:free`.
 - `.env` is loaded automatically at startup, and existing shell environment variables still win if both are set.
@@ -197,6 +217,7 @@ mini-codex/
 - `examples/README.md` describes the bundled sample workspaces.
 - `docs/` is for higher-level project notes, starting with the architecture overview.
 - `docs/usage.md` shows a few concrete Mini Codex workflows.
+- `MINI_CODEX_PROVIDER="openai"` switches the app to OpenAI, and `MINI_CODEX_PROVIDER="custom"` supports any OpenAI-compatible endpoint.
 - Release notes live in [CHANGELOG.md](/Users/0xgets/Documents/Python/mini-codex/CHANGELOG.md).
 
 ## Safety

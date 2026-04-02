@@ -3,11 +3,14 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 DEFAULT_MODEL = "openrouter/free"
+DEFAULT_PROVIDER = "openrouter"
 DEFAULT_REASONING_EFFORT = "medium"
 MAX_TOOL_ROUNDS = 8
 DEFAULT_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+SUPPORTED_PROVIDERS = ("openrouter", "openai", "custom")
 
 SYSTEM_PROMPT = """
 You are Mini Codex, a concise coding assistant that helps inside a local workspace.
@@ -41,6 +44,58 @@ class AppConfig:
     reasoning_effort: str
     max_tool_rounds: int
     provider_name: str
+
+
+@dataclass(frozen=True)
+class ProviderSettings:
+    provider: str
+    provider_name: str
+    api_key_env: str
+    api_key: Optional[str]
+    base_url: Optional[str]
+    default_headers: Optional[dict[str, str]] = None
+
+
+def default_model_for_provider(provider: str) -> Optional[str]:
+    if provider == "openrouter":
+        return os.getenv("MINI_CODEX_MODEL", DEFAULT_MODEL)
+    if provider == "openai":
+        return os.getenv("OPENAI_MODEL")
+    if provider == "custom":
+        return os.getenv("MINI_CODEX_MODEL") or os.getenv("CUSTOM_MODEL")
+    raise ValueError(f"unsupported provider: {provider}")
+
+
+def resolve_provider_settings(provider: str) -> ProviderSettings:
+    if provider == "openrouter":
+        return ProviderSettings(
+            provider="openrouter",
+            provider_name="OpenRouter",
+            api_key_env="OPENROUTER_API_KEY",
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+            base_url=os.getenv("OPENROUTER_BASE_URL", DEFAULT_OPENROUTER_BASE_URL),
+            default_headers={"X-Title": "Mini Codex"},
+        )
+
+    if provider == "openai":
+        return ProviderSettings(
+            provider="openai",
+            provider_name="OpenAI",
+            api_key_env="OPENAI_API_KEY",
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL") or None,
+        )
+
+    if provider == "custom":
+        return ProviderSettings(
+            provider="custom",
+            provider_name="Custom",
+            api_key_env="MINI_CODEX_API_KEY",
+            api_key=os.getenv("MINI_CODEX_API_KEY"),
+            base_url=os.getenv("MINI_CODEX_BASE_URL") or None,
+        )
+
+    raise ValueError(f"unsupported provider: {provider}")
 
 
 def load_dotenv_file(path: Path) -> None:

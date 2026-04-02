@@ -12,17 +12,27 @@ except ImportError:  # pragma: no cover - exercised in runtime setup, not tests
 
 from .agent import MiniCodex
 from .config import (
-    DEFAULT_MODEL,
-    DEFAULT_OPENROUTER_BASE_URL,
+    DEFAULT_PROVIDER,
     DEFAULT_REASONING_EFFORT,
     MAX_TOOL_ROUNDS,
+    SUPPORTED_PROVIDERS,
     AppConfig,
+    default_model_for_provider,
     load_dotenv_file,
+    resolve_provider_settings,
 )
 from .version import VERSION
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    bootstrap = argparse.ArgumentParser(add_help=False)
+    bootstrap.add_argument(
+        "--provider",
+        default=os.getenv("MINI_CODEX_PROVIDER", DEFAULT_PROVIDER),
+    )
+    bootstrap_args, _ = bootstrap.parse_known_args(argv)
+    model_default = default_model_for_provider(bootstrap_args.provider)
+
     parser = argparse.ArgumentParser(
         description="Mini Codex: a tiny coding assistant in your terminal."
     )
@@ -32,9 +42,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Optional one-shot prompt. If omitted, Mini Codex starts in interactive mode.",
     )
     parser.add_argument(
+        "--provider",
+        default=bootstrap_args.provider,
+        choices=SUPPORTED_PROVIDERS,
+        help="Provider to use. Default: openrouter.",
+    )
+    parser.add_argument(
         "--model",
-        default=os.getenv("MINI_CODEX_MODEL", DEFAULT_MODEL),
-        help=f"Model to use. Default: {DEFAULT_MODEL}",
+        default=model_default,
+        help="Model to use. Use --provider plus the matching API key for other providers.",
     )
     parser.add_argument(
         "--workdir",
@@ -75,28 +91,39 @@ def ensure_runtime_ready() -> None:
         )
         raise SystemExit(1)
 
-    if not os.getenv("OPENROUTER_API_KEY"):
-        print("OPENROUTER_API_KEY is not set.", file=sys.stderr)
-        print("Example: export OPENROUTER_API_KEY='your_api_key_here'", file=sys.stderr)
-        raise SystemExit(1)
-
 
 def build_agent(args: argparse.Namespace) -> MiniCodex:
     ensure_runtime_ready()
-    client = OpenAI(
-        base_url=os.getenv("OPENROUTER_BASE_URL", DEFAULT_OPENROUTER_BASE_URL),
-        api_key=os.getenv("OPENROUTER_API_KEY"),
-        default_headers={
-            "X-Title": "Mini Codex",
-        },
-    )
+    settings = resolve_provider_settings(args.provider)
+
+    if not settings.api_key:
+        print(f"{settings.api_key_env} is not set.", file=sys.stderr)
+        raise SystemExit(1)
+    if settings.provider == "custom" and not settings.base_url:
+        print("MINI_CODEX_BASE_URL is not set.", file=sys.stderr)
+        raise SystemExit(1)
+    if not args.model:
+        print(
+            f"{settings.provider_name} requires a model. Set --model or the matching "
+            "provider model env var.",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
+
+    client_kwargs: dict[str, object] = {"api_key": settings.api_key}
+    if settings.base_url:
+        client_kwargs["base_url"] = settings.base_url
+    if settings.default_headers:
+        client_kwargs["default_headers"] = settings.default_headers
+
+    client = OpenAI(**client_kwargs)
     config = AppConfig(
         model=args.model,
         workdir=Path(args.workdir).resolve(),
         auto_approve=args.auto_approve,
         reasoning_effort=args.reasoning_effort,
         max_tool_rounds=args.max_tool_rounds,
-        provider_name="OpenRouter",
+        provider_name=settings.provider_name,
     )
     return MiniCodex(client, config)
 

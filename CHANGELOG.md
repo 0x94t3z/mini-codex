@@ -9,6 +9,7 @@ All notable changes to Mini Codex will be documented in this file.
 - `--version` in the CLI and a single version source in `src/mini_codex/version.py`.
 - A local pre-commit setup for Ruff and the unit tests.
 - A lightweight release workflow built around this changelog.
+- Provider switching for OpenRouter, OpenAI, and other OpenAI-compatible APIs.
 
 ### Changed
 
