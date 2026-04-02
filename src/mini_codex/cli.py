@@ -35,7 +35,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     model_default = default_model_for_provider(bootstrap_args.provider)
 
     parser = argparse.ArgumentParser(
-        description="Mini Codex: a tiny coding assistant in your terminal."
+        description="Mini Codex: a tiny coding assistant in your terminal.",
+        epilog=(
+            "Provider examples:\n"
+            "  mini-codex --provider openrouter --model openrouter/free\n"
+            "  mini-codex --provider openai --model gpt-4.1\n"
+            "  mini-codex --provider gemini --model gemini-2.5-flash\n"
+            "  mini-codex --provider xai --model grok-4.20-beta-latest-non-reasoning"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "prompt",

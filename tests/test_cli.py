@@ -169,6 +169,18 @@ class CliTests(unittest.TestCase):
         self.assertEqual(exc_info.exception.code, 0)
         self.assertIn("Mini Codex 0.1.0", output.getvalue())
 
+    def test_parse_args_help_includes_provider_examples(self) -> None:
+        output = StringIO()
+        with redirect_stdout(output):
+            with self.assertRaises(SystemExit) as exc_info:
+                parse_args(["--help"])
+
+        self.assertEqual(exc_info.exception.code, 0)
+        text = output.getvalue()
+        self.assertIn("Provider examples:", text)
+        self.assertIn("--provider gemini --model gemini-2.5-flash", text)
+        self.assertIn("--provider xai --model grok-4.20-beta-latest-non-reasoning", text)
+
 
 if __name__ == "__main__":
     unittest.main()
