@@ -10,16 +10,13 @@ selected workspace, and asks before it writes files or runs commands.
 
 ## Features
 
-- chat in the terminal
-- list and read files inside a workspace
-- create or overwrite text files after approval
-- create folders and move files inside the workspace
-- run non-shell commands like `python3 -m unittest` after approval
-- continue a conversation across multiple turns
-- use OpenRouter's free router by default
-- switch to OpenAI, Gemini, xAI, or another OpenAI-compatible provider with env vars or `--provider`
-- show a simple elapsed timer while the model is thinking
-- print the current CLI version with `mini-codex --version`
+- Terminal chat with multi-turn context
+- Workspace-aware file browsing and editing
+- Approval-gated writes, deletes, folder creation, and file moves
+- Safe command execution for non-shell tools like `python3 -m unittest`
+- OpenRouter by default, with provider switching for OpenAI, Gemini, xAI, or custom OpenAI-compatible endpoints
+- A simple elapsed timer while the model is thinking
+- `mini-codex --version` for quick version checks
 
 ## Quick Start
 
